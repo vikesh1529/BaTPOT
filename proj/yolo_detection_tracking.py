@@ -3,8 +3,8 @@ import time
 from yolo_detector import YoloDetector
 from tracker import Tracker
 
-MODEL_PATH = "models/yolov10m.pt"
-VIDEO_PATH = "assets/bus_station.mp4"  
+MODEL_PATH = "proj/models/yolov8n.pt"
+VIDEO_PATH = "proj/assets/escalator_small.mp4"  
 
 def main():
     detector = YoloDetector(model_path=MODEL_PATH, confidence=0.25)
@@ -23,7 +23,9 @@ def main():
 
         start_time = time.perf_counter()
         detections = detector.detect(frame)
-        tracking_ids, boxes, labels = tracker.track(detections, frame)
+        tracking_ids, boxes = tracker.track(detections, frame)
+        tracking_ids, boxes = tracker.track(detections, frame)
+        labels = [d[2] for d in detections]
 
         for tracking_id, bounding_box, label in zip(tracking_ids, boxes, labels):
             x1, y1, x2, y2 = map(int, bounding_box)
@@ -34,9 +36,8 @@ def main():
 
         end_time = time.perf_counter()
         fps = 1 / (end_time - start_time)
-        cv2.putText(frame, f"FPS: {fps:.2f}", (20, 40),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 255, 255), 2)
-
+        cv2.putText(frame, f"ID:{tracking_id}", (x1, y1 - 10),
+            cv2.FONT_HERSHEY_SIMPLEX, 0.6, color, 2)
         cv2.imshow("Bag/Suitcase Tracking", frame)
 
         key = cv2.waitKey(1) & 0xFF

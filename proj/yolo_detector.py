@@ -16,6 +16,8 @@ class YoloDetector:
         boxes = result.boxes
         detections = []
         for box in boxes:
+            if conf < 0.4:
+                continue
             x1, y1, x2, y2 = box.xyxy[0]
             x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)
             w, h = x2 - x1, y2 - y1
@@ -26,7 +28,8 @@ class YoloDetector:
                 continue
 
             conf = float(box.conf[0])
-            detections.append(([x1, y1, x2, y2], class_name, conf))
-
+            w = x2 - x1
+            h = y2 - y1
+            detections.append(([x1, y1, w, h], conf, class_name))
         return detections
 
