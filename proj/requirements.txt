@@ -1,3 +1,10 @@
-opencv-python
 ultralytics
-deep-sort-realtime
+opencv-python
+lap
+filterpy
+onemetric
+torch
+torchvision
+numpy
+tqdm
+matplotlib
